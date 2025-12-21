@@ -47,18 +47,17 @@ def train_epoch(
         loss.backward()
         optimizer.step()
 
-        train_loss += loss.item() * inputs.size(0)
+        train_loss += loss.item()
 
         _, pred = torch.max(outputs, 1)
 
         total_samples += labels.size(0)
         correct_pred += (pred == labels).sum().item()
 
-        if i % 500 == 499:                      # show progress every 500 steps
-            cur_item = i * len(inputs)
-            print(f"Step {cur_item}: Loss {loss}")
+        if (i+1) % 50 == 0:                        # show progress every 50 steps
+            print(f"Step {i+1}: Loss {loss}, Accuracy {correct_pred / total_samples}")
 
-    avg_loss = train_loss / total_samples
+    avg_loss = train_loss / len(train_loader)
     accuracy = correct_pred / total_samples
 
     return avg_loss, accuracy
@@ -97,14 +96,14 @@ def validate_epoch(
 
             outputs = model(inputs)
             loss = criterion(outputs, labels)
-            test_loss += loss.item() * inputs.size(0)
+            test_loss += loss.item()
 
             _, pred = torch.max(outputs, 1)
 
             total_samples += labels.size(0)
             correct_pred += (pred == labels).sum().item()
 
-    avg_loss = test_loss / total_samples
+    avg_loss = test_loss / len(val_loader)
     accuracy = correct_pred / total_samples
 
     return avg_loss, accuracy
@@ -167,8 +166,14 @@ def training_loop(
 
         if scheduler is not None:
             scheduler.step()
-            current_lr = optimizer.params_groups[0]["lr"]
+            current_lr = optimizer.param_groups[0]["lr"]
             print(f"Current learning rate: {current_lr}")
+
+        training_history["train_loss"].append(train_loss)
+        training_history["train_accuracy"].append(train_accuracy)
+        training_history["val_loss"].append(val_loss)
+        training_history["val_accuracy"].append(val_accuracy)
+
 
         if val_accuracy > best_val_accuracy:
             best_val_accuracy = val_accuracy
@@ -181,18 +186,11 @@ def training_loop(
             }, save_path)
             print(f"Best model saved with validation accuracy: {val_accuracy:.4f}")
 
-        training_history["train_loss"].append(train_loss)
-        training_history["train_accuracy"].append(train_accuracy)
-        training_history["val_loss"].append(val_loss)
-        training_history["val_accuracy"].append(val_accuracy)
 
         print(f"Training Loss: {train_loss}, Training Accuracy: {train_accuracy}")
         print(f"Validation Loss: {val_loss}, Validation Accuracy: {val_accuracy}")
         print()
 
-        checkpoint = torch.load(save_path)
-        model.load_state_dict(checkpoint["model_state_dict"])
+    print(f"Training completed. Best validation accuracy: {best_val_accuracy}")
 
-        print(f"Training completed. Best validation accuracy: {best_val_accuracy}")
-
-        return training_history
+    return training_history

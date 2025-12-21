@@ -17,19 +17,27 @@ class DigitRecognizer(nn.Module):
         
         self.model = nn.Sequential(
             # input shape: (1, 28, 28)
-            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3),
-            # shape after convolution: (32, 26, 26)
-            nn.AvgPool2d(kernel_size=2),
-            nn.Dropout2d(p=0.4),
-            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
-            # shape after convolution: (64, 24, 24)
-            nn.AvgPool2d(kernel_size=2),
-            nn.Dropout2d(p=0.4),
-            nn.Flatten(),
-            # flattens to perform linear transformation to (num_classes, )
-            nn.LazyLinear(out_features=num_classes),
-            # sigmoid to clip values to (0, 1)
-            nn.Sigmoid()
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1),
+            nn.ReLU(),
+            # shape after convolution: (32, 28, 28)
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            # shape after pooling: (32, 14, 14)
+            nn.Dropout2d(p=0.25),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
+            nn.ReLU(),
+            # shape after convolution: (64, 14, 14)
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            # shape after pooling: (64, 7, 7)
+            nn.Dropout2d(p=0.25),
+            nn.Flatten()
+        )
+
+        self.classifier = nn.Sequential(
+            nn.Dropout(p=0.25),
+            nn.Linear(in_features=64*7*7, out_features=128),
+            nn.ReLU(),
+            nn.Dropout(p=0.25),
+            nn.Linear(in_features=128, out_features=num_classes)
         )
     
 
@@ -43,7 +51,8 @@ class DigitRecognizer(nn.Module):
         returns:
         - a tensor of logits (shape (num_classes, ))
         """
-        logits = self.model(x)
+        features = self.model(x)
+        logits = self.classifier(features)
 
         return logits
 

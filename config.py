@@ -1,5 +1,6 @@
 import torch
-from typing import Tuple
+import torch.nn as nn
+from typing import Tuple, Literal
 
 
 class Config:
@@ -13,8 +14,8 @@ class Config:
             learning_rate: float = 1e-3,
             epochs: int = 10,
             momentum: float = 0.9,
-            optimizer: str = "Adam",
-            scheduler: str = "StepLR",
+            optimizer: Literal["Adam", "AdamW", "SGD", "RMSprop", "Adagrad"] = "Adam",
+            scheduler: Literal["StepLR", "MultiStepLR", "ExponentialLR", "ReduceLRonPlateau"] = "StepLR",
             model_path: str = "./saved_models/",
             log_dir: str = "./logs/"
         ):
@@ -43,7 +44,7 @@ class Config:
         self.learning_rate = learning_rate
         self.epochs = epochs
         self.momentum = momentum
-
+        
         self.optimizer = optimizer
         self.scheduler = scheduler
 

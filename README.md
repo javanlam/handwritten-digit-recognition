@@ -22,6 +22,8 @@ The model used was trained on the [MNIST](https://en.wikipedia.org/wiki/MNIST_da
 | | 4 | `Dropout` | `p=0.25` | (128,) | (128,) |
 | | 5 | `Linear` | `in_features=128`, `out_features=num_classes` | (128,) | (10,) |
 
+During test time, the output logits from the final linear layer will be passed through a Softmax classifier layer to obtain prediction probabilities.
+
 ## Results
 The final validation accuracy was around 99.07%, and test accuracy around 99.24%.
 All training logs and results can be viewed inside the [demo notebook](demo.ipynb).

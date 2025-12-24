@@ -1,3 +1,10 @@
+"""
+Example command to start FastAPI app:
+uvicorn main:app --reload --port 8000
+
+The app will be hosted on localhost:8000 with this command.
+"""
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel

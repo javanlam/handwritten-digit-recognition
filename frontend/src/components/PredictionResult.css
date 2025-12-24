@@ -1,0 +1,149 @@
+.prediction-container {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.prediction-container h3 {
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.primary-prediction {
+  margin-bottom: 30px;
+}
+
+.prediction-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.predicted-digit {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.confidence {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.top-predictions {
+  margin-top: 30px;
+}
+
+.top-predictions h4 {
+  margin-bottom: 20px;
+  color: #555;
+  font-size: 1.2rem;
+}
+
+.predictions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.prediction-item:hover {
+  transform: translateX(5px);
+  background: #e9ecef;
+}
+
+.prediction-rank {
+  width: 40px;
+  height: 40px;
+  background: #667eea;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.prediction-digit {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  min-width: 40px;
+}
+
+.prediction-bar {
+  flex: 1;
+  height: 20px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.probability-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  transition: width 1s ease;
+}
+
+.probability-value {
+  min-width: 80px;
+  text-align: right;
+  color: #666;
+  font-weight: 600;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.error {
+  background: #fff5f5;
+  border: 2px solid #fed7d7;
+  color: #c53030;
+}
+
+.error h3 {
+  color: #c53030;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

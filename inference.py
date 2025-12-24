@@ -71,7 +71,9 @@ def single_image_inference(
     if model is None:
         return {
             "predicted_class": "",
-            "probability": ""
+            "probability": "",
+            "top3_classes": "",
+            "top3_probabilities": ""
         }
     
     if len(image_array.shape) == 2:
@@ -83,7 +85,7 @@ def single_image_inference(
         mean=(0.5,),
         std=(0.5,)
     )
-    image_tensor = transform(image_tensor)                          # transform to [-1.0, 1.0] 
+    image_tensor = transform(image_tensor)                              # transform to [-1.0, 1.0] 
     image_tensor = image_tensor.to(device)
     
     predictions = model(image_tensor)
@@ -92,13 +94,17 @@ def single_image_inference(
     predicted_class = torch.argmax(probabilities)
     probability = torch.max(probabilities)
 
+    probabilities_top3, predicted_top3_classes = torch.topk(probabilities, k=3)
+
     prediction = {
-        "predicted_class": predicted_class,
-        "probability": probability
+        "predicted_class": predicted_class.item(),
+        "probability": probability.item(),
+        "top3_classes": predicted_top3_classes.view(-1).tolist(),       # Tensor is of shape (1, k)
+        "top3_probabilities": probabilities_top3.view(-1).tolist()      # use view(-1) to flatten the tensor before converting to list
     }
 
-    print(f"Predicted result: {prediction['predicted_class']}")
-    print(f"Probability: {prediction["probability"]}")
+    # print(f"Predicted result: {prediction['predicted_class']}")
+    # print(f"Probability: {prediction["probability"]}")
 
     return prediction
 
